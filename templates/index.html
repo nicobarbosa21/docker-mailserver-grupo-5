@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8">
+    <title>TPI-Grupo 5</title>
+    <style>
+      body { font-family: Arial, sans-serif; margin: 2rem; background: #f5f5f5; }
+      h1 { margin-bottom: 0.5rem; }
+      .panel { background: #fff; padding: 1.5rem; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 1.5rem; }
+      label { display: block; margin-top: 0.75rem; font-weight: 600; }
+      input[type="text"], textarea { width: 100%; padding: 0.5rem; border: 1px solid #ccc; border-radius: 4px; margin-top: 0.25rem; }
+      textarea { min-height: 8rem; resize: vertical; }
+      button { margin-top: 1rem; padding: 0.6rem 1.2rem; border: none; border-radius: 4px; background: #0069d9; color: #fff; cursor: pointer; }
+      button:hover { background: #0053aa; }
+      .status { padding: 0.75rem 1rem; border-radius: 4px; margin-bottom: 1rem; }
+      .status.error { background: #ffe6e6; color: #900; }
+      .status.ok { background: #e6ffec; color: #036400; }
+      table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
+      th, td { padding: 0.75rem; border-bottom: 1px solid #ddd; text-align: left; vertical-align: top; }
+      th { background: #fafafa; }
+      .empty { text-align: center; padding: 2rem 0; color: #666; }
+      .flash { background: #e6ffec; color: #036400; padding: 0.75rem 1rem; border-radius: 4px; margin-bottom: 1rem; }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>SMTP TPI Grupo 5</h1>
+      <p>Cliente emisor: {{ sender }} &mdash; Cliente receptor: {{ recipient }}</p>
+    </header>
+
+    <main>
+      <section class="panel">
+        {% with messages = get_flashed_messages() %}
+          {% if messages %}
+            {% for message in messages %}
+              <div class="flash">{{ message }}</div>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
+        {% if status_message %}
+          <div class="status error">{{ status_message }}</div>
+        {% endif %}
+        <h2>Enviar un correo</h2>
+        <form method="post">
+          <label for="recipient">Destinatario</label>
+          <input id="recipient" name="recipient" type="text" value="{{ recipient }}">
+
+          <label for="subject">Asunto</label>
+          <input id="subject" name="subject" type="text" placeholder="Asunto del mensaje">
+
+          <label for="body">Mensaje</label>
+          <textarea id="body" name="body" placeholder="Escribe tu mensaje aqui"></textarea>
+
+          <button type="submit">Enviar correo</button>
+        </form>
+      </section>
+
+      <section class="panel">
+        <h2>Actividad reciente del buz&oacute;n</h2>
+        {% if messages %}
+          <table>
+            <thead>
+              <tr>
+                <th>Fecha</th>
+                <th>Remitente</th>
+                <th>Contenido</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for message in messages %}
+                <tr>
+                  <td>{{ message[0] or "Sin fecha" }}</td>
+                  <td>{{ message[1] or "Desconocido" }}</td>
+                  <td><pre style="margin:0; white-space:pre-wrap;">{{ message[2] or "" }}</pre></td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        {% else %}
+          <div class="empty">No hay correos para mostrar.</div>
+        {% endif %}
+      </section>
+    </main>
+  </body>
+</html>
