@@ -1,4 +1,3 @@
-
 1. Iniciar el contenedor del servidor de correo.
    docker compose up -d
 
